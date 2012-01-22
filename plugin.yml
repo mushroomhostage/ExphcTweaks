@@ -1,3 +1,7 @@
 name: BugTest1
 main: me.exphc.BugTest1.BugTest1
 version: 0
+commands:
+    bugtest1:
+        description: Test something
+        usage: /<command>
