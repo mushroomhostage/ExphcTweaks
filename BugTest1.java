@@ -90,7 +90,7 @@ public class BugTest1 extends JavaPlugin {
 
     
         ItemStack item = new ItemStack(Material.DIRT, 1);
-        item.addUnsafeEnchantment(Enchantment.KNOCKBACK, 42);
+        item.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
 
         player.setItemInHand(item);
 

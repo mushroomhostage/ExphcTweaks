@@ -3,5 +3,5 @@ CLASSPATH=../craftbukkit-1.1-R1-SNAPSHOT.jar javac *.java -Xlint:unchecked -Xlin
 rm -rf me 
 mkdir -p me/exphc/BugTest1
 mv *.class me/exphc/BugTest1
-jar cf BugTest1.jar me/ *.yml 
+jar cf BugTest1.jar me/ *.yml *.java
 cp BugTest1.jar ../plugins/
