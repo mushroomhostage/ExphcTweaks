@@ -1,3 +1,9 @@
 https://bukkit.atlassian.net/browse/BUKKIT-596 
 BlockPlaceEvent getItemInHand() loses enchantments
 
+https://bukkit.atlassian.net/browse/BUKKIT-602
+Enchantments lost on crafting recipe output
+
+
+https://bukkit.atlassian.net/browse/BUKKIT-329
+MobSpawner should retains durability/data values.

@@ -20,6 +20,7 @@ import org.bukkit.plugin.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.Material.*;
 import org.bukkit.material.*;
 import org.bukkit.block.*;
@@ -32,68 +33,20 @@ import org.bukkit.scheduler.*;
 import org.bukkit.enchantments.*;
 import org.bukkit.*;
 
-class BugTest1Listener implements Listener {
-    Logger log = Logger.getLogger("Minecraft");
-
-    BugTest1 plugin;
-
-    public BugTest1Listener(BugTest1 pl) {
-        plugin = pl;
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onBlockPlace(final BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-
-        log.info("event.getItemInHand() = " + event.getItemInHand().getEnchantments());
-        log.info("player.getItemInHand() = " + player.getItemInHand().getEnchantments());
-
-        // BUG: event.getItemInHand() loses enchantments! (tested on craftbukkit-1.1-R1-20120121.235721-81.jar) Cannot use it
-        //ItemStack item = event.getItemInHand();
-    }
-}
-
 public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
-    BugTest1Listener listener;
 
     public void onEnable() {
-        listener = new BugTest1Listener(this);
+        ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE, 1);
+        item.addEnchantment(Enchantment.SILK_TOUCH, 1);
+        ShapelessRecipe recipe = new ShapelessRecipe(item);
+        recipe.addIngredient(2, Material.DIRT);
+        Bukkit.getServer().addRecipe(recipe);
 
         log.info("BugTest1 enabled");
     }
 
     public void onDisable() {
         log.info("BugTest1 disabled");
-    }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!cmd.getName().equalsIgnoreCase("bugtest1")) {
-            return false;
-        }
-
-        Player player;
-
-        if (sender instanceof Player) {
-            player = (Player)sender;
-        } else {
-            // Get player name from first argument
-            player = Bukkit.getServer().getPlayer(args[0]);
-            if (player == null) {
-                sender.sendMessage("no such player");
-                return false;
-            }
-        }
-
-
-    
-        ItemStack item = new ItemStack(Material.DIRT, 1);
-        item.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-
-        player.setItemInHand(item);
-
-        return true;
     }
 }
