@@ -37,11 +37,20 @@ public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
     public void onEnable() {
-        ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE, 1);
-        item.addEnchantment(Enchantment.SILK_TOUCH, 1);
+        ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
+        item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
+
+        log.info("enchantments = " + item.getEnchantments());
+
+        ItemStack item2 = item.clone();
+
+        log.info("enchantments = " + item2.getEnchantments());
+
+        /*
         ShapelessRecipe recipe = new ShapelessRecipe(item);
         recipe.addIngredient(2, Material.DIRT);
         Bukkit.getServer().addRecipe(recipe);
+        */
 
         log.info("BugTest1 enabled");
     }
