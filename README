@@ -1,3 +1,6 @@
+https://bukkit.atlassian.net/browse/BUKKIT-621
+ItemStack cannot clone all items, uses addEnchantment instead of addUnsafeEnchantment
+
 https://bukkit.atlassian.net/browse/BUKKIT-596 
 BlockPlaceEvent getItemInHand() loses enchantments
 

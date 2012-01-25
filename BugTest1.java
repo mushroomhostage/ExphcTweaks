@@ -37,6 +37,7 @@ public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
     public void onEnable() {
+    /*
         ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
         item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
 
@@ -45,6 +46,7 @@ public class BugTest1 extends JavaPlugin {
         ItemStack item2 = item.clone();
 
         log.info("enchantments = " + item2.getEnchantments());
+        */
 
         /*
         ShapelessRecipe recipe = new ShapelessRecipe(item);
