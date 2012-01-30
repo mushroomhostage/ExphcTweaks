@@ -33,26 +33,37 @@ import org.bukkit.scheduler.*;
 import org.bukkit.enchantments.*;
 import org.bukkit.*;
 
+import org.bukkit.craftbukkit.entity.CraftArrow;
+
+class BugTest1Listener implements Listener {
+    BugTest1 plugin;
+
+    public BugTest1Listener(BugTest1 pl) {
+        plugin = pl;
+
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL) 
+    public void onProjectileHit(ProjectileHitEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Arrow)) {
+            return;
+        }
+
+        Arrow arrow = (Arrow)entity;
+
+        //plugin.log.info("arrow = " + ((CraftArrow)arrow).getHandle().fromPlayer);
+        ((CraftArrow)arrow).getHandle().fromPlayer = true;
+    }
+}
+
 public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
+    Listener listener;
 
     public void onEnable() {
-    /*
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
-        item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
-
-        log.info("enchantments = " + item.getEnchantments());
-
-        ItemStack item2 = item.clone();
-
-        log.info("enchantments = " + item2.getEnchantments());
-        */
-
-        /*
-        ShapelessRecipe recipe = new ShapelessRecipe(item);
-        recipe.addIngredient(2, Material.DIRT);
-        Bukkit.getServer().addRecipe(recipe);
-        */
+        listener = new BugTest1Listener(this);
 
         log.info("BugTest1 enabled");
     }
