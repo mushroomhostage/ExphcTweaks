@@ -63,7 +63,7 @@ public class BugTest1 extends JavaPlugin {
     Listener listener;
 
     public void onEnable() {
-        listener = new BugTest1Listener(this);
+        //DISABLED listener = new BugTest1Listener(this);
 
         log.info("BugTest1 enabled");
     }
