@@ -35,6 +35,8 @@ import org.bukkit.*;
 
 import org.bukkit.craftbukkit.entity.CraftArrow;
 
+import me.exphc.RadioBeacon.AntennaChangeEvent;
+
 class BugTest1Listener implements Listener {
     BugTest1 plugin;
 
@@ -45,16 +47,8 @@ class BugTest1Listener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL) 
-    public void onProjectileHit(ProjectileHitEvent event) {
-        Entity entity = event.getEntity();
-        if (!(entity instanceof Arrow)) {
-            return;
-        }
-
-        Arrow arrow = (Arrow)entity;
-
-        //plugin.log.info("arrow = " + ((CraftArrow)arrow).getHandle().fromPlayer);
-        ((CraftArrow)arrow).getHandle().fromPlayer = true;
+    public void onEvent(AntennaChangeEvent event) {
+        plugin.log.info("event: " + event);
     }
 }
 
@@ -63,7 +57,7 @@ public class BugTest1 extends JavaPlugin {
     Listener listener;
 
     public void onEnable() {
-        //DISABLED listener = new BugTest1Listener(this);
+        listener = new BugTest1Listener(this);
 
         log.info("BugTest1 enabled");
     }
