@@ -1,3 +1,6 @@
+https://bukkit.atlassian.net/browse/BUKKIT-738
+Custom recipes duplicated on reload, no API method to remove/check, memory issue
+
 https://bukkit.atlassian.net/browse/BUKKIT-621
 ItemStack cannot clone all items, uses addEnchantment instead of addUnsafeEnchantment
 

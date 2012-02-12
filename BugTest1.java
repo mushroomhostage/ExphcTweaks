@@ -33,36 +33,27 @@ import org.bukkit.scheduler.*;
 import org.bukkit.enchantments.*;
 import org.bukkit.*;
 
-import org.bukkit.craftbukkit.entity.CraftArrow;
-
-import me.exphc.RadioBeacon.AntennaChangeEvent;
-
-class BugTest1Listener implements Listener {
-    BugTest1 plugin;
-
-    public BugTest1Listener(BugTest1 pl) {
-        plugin = pl;
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL) 
-    public void onEvent(AntennaChangeEvent event) {
-        plugin.log.info("event: " + event);
-    }
-}
+import net.minecraft.server.CraftingManager;
 
 public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
-    Listener listener;
 
     public void onEnable() {
-        //DISABLED listener = new BugTest1Listener(this);
+        ShapelessRecipe recipe = new ShapelessRecipe(new ItemStack(Material.DIAMOND_PICKAXE, 1));
 
-        log.info("BugTest1 enabled");
+        recipe.addIngredient(2, Material.DIRT);
+
+        Bukkit.addRecipe(recipe);
     }
 
     public void onDisable() {
-        log.info("BugTest1 disabled");
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        CraftingManager manager = net.minecraft.server.CraftingManager.getInstance();
+
+        sender.sendMessage("Loaded "+manager.b().size()+" recipes");
+
+        return true;
     }
 }
