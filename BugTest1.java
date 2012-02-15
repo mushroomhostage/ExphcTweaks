@@ -39,21 +39,9 @@ public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
     public void onEnable() {
-        ShapelessRecipe recipe = new ShapelessRecipe(new ItemStack(Material.DIAMOND_PICKAXE, 1));
-
-        recipe.addIngredient(2, Material.DIRT);
-
-        Bukkit.addRecipe(recipe);
+        log.info("monster egg = " + Material.MONSTER_EGG);
     }
 
     public void onDisable() {
-    }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        CraftingManager manager = net.minecraft.server.CraftingManager.getInstance();
-
-        sender.sendMessage("Loaded "+manager.b().size()+" recipes");
-
-        return true;
     }
 }
