@@ -39,7 +39,12 @@ public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
     public void onEnable() {
-        log.info("monster egg = " + Material.MONSTER_EGG);
+        net.minecraft.server.CraftingManager.getInstance().registerShapelessRecipe(
+            new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOL, 1, net.minecraft.server.BlockCloth.e(2)),
+            new Object[] { 
+                new net.minecraft.server.ItemStack(net.minecraft.server.Block.CACTUS, 1, 0),
+                new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOL, 1, 0)
+            });
     }
 
     public void onDisable() {
