@@ -39,14 +39,28 @@ public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
     public void onEnable() {
-        net.minecraft.server.CraftingManager.getInstance().registerShapelessRecipe(
-            new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOL, 1, net.minecraft.server.BlockCloth.e(2)),
-            new Object[] { 
-                new net.minecraft.server.ItemStack(net.minecraft.server.Block.CACTUS, 1, 0),
-                new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOL, 1, 0)
-            });
     }
 
     public void onDisable() {
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+        if (!cmd.getName().equalsIgnoreCase("chunk")) {
+            return false;
+        }
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Must be sent by player");
+            return true;
+        }
+        Player player = (Player)sender;
+
+        // See Bananachunk http://forums.bukkit.org/threads/fix-mech-bananachunk-v4-6-stuck-in-a-lag-hole-request-a-chunk-resend-1060.19232/page-7
+        World world = player.getWorld();
+        Chunk chunk = world.getChunkAt(player.getLocation());
+        world.refreshChunk(chunk.getX(), chunk.getZ());
+
+        sender.sendMessage("Chunk resent");
+
+        return true;
     }
 }
