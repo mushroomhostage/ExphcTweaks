@@ -44,6 +44,7 @@ public class BugTest1 extends JavaPlugin {
     final int ID_DISH = 3704;           // Mo' Food and Crops
 
     public void onEnable() {
+        /* TODO
         // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
         // Override wooden plank -> wood flour (TODO), and add clay block -> dish 
         // https://github.com/mushroomhostage/exphc/issues/2
@@ -56,6 +57,7 @@ public class BugTest1 extends JavaPlugin {
 
         Bukkit.addRecipe(dishRecipe);
         Bukkit.addRecipe(flourRecipe);
+        */
     }
 
     public void onDisable() {
