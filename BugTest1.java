@@ -38,7 +38,24 @@ import net.minecraft.server.CraftingManager;
 public class BugTest1 extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
 
+    final int ID_WOOD_FLOUR = 1006;     // PlasticCraft
+    final int ID_PLANK = 5;             // vanilla, but I better name than Bukkit's Material
+    final int ID_CLAY_BLOCK = 82;       // vanilla
+    final int ID_DISH = 3704;           // Mo' Food and Crops
+
     public void onEnable() {
+        // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
+        // Override wooden plank -> wood flour (TODO), and add clay block -> dish 
+        // https://github.com/mushroomhostage/exphc/issues/2
+        ShapelessRecipe dishRecipe = new ShapelessRecipe(new ItemStack(ID_DISH, 2));
+        dishRecipe.addIngredient(Material.getMaterial(ID_CLAY_BLOCK));
+
+        // TODO: this doesn't work, how can we fix?? old recipe still exists
+        ShapelessRecipe flourRecipe = new ShapelessRecipe(new ItemStack(ID_WOOD_FLOUR, 1));
+        flourRecipe.addIngredient(Material.getMaterial(ID_PLANK));
+
+        Bukkit.addRecipe(dishRecipe);
+        Bukkit.addRecipe(flourRecipe);
     }
 
     public void onDisable() {
