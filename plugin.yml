@@ -5,3 +5,4 @@ commands:
     chunk:
         description: Resend your chunk
         usage: /chunk
+softdepend: [RecipeRepo] # so it removes recipes first, before we add our own

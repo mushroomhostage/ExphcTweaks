@@ -38,28 +38,24 @@ import net.minecraft.server.CraftingManager;
 public class BugTest1 extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
-    final int ID_WOOD_FLOUR = 1006;     // PlasticCraft
-    final int ID_PLANK = 5;             // vanilla, but I better name than Bukkit's Material
-    final int ID_CLAY_BLOCK = 82;       // vanilla
-    final int ID_DISH = 3704;           // Mo' Food and Crops
 
     public void onEnable() {
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
-
-        /* TODO
         // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
-        // Override wooden plank -> wood flour (TODO), and add clay block -> dish 
+        // Add clay block -> dish, instead of wood plank -> dish
         // https://github.com/mushroomhostage/exphc/issues/2
+        final int ID_DISH = 3704;           // Mo' Food and Crops
         ShapelessRecipe dishRecipe = new ShapelessRecipe(new ItemStack(ID_DISH, 2));
-        dishRecipe.addIngredient(Material.getMaterial(ID_CLAY_BLOCK));
-
-        // TODO: this doesn't work, how can we fix?? old recipe still exists
-        ShapelessRecipe flourRecipe = new ShapelessRecipe(new ItemStack(ID_WOOD_FLOUR, 1));
-        flourRecipe.addIngredient(Material.getMaterial(ID_PLANK));
-
+        dishRecipe.addIngredient(Material.CLAY);
         Bukkit.addRecipe(dishRecipe);
+
+        /* Adding a new recipe here doesn't override - instead we have to remove using RecipeRepo
+        final int ID_WOOD_FLOUR = 1006;     // PlasticCraft
+        ShapelessRecipe flourRecipe = new ShapelessRecipe(new ItemStack(ID_WOOD_FLOUR, 1));
+        flourRecipe.addIngredient(Material.WOOD); //plank
         Bukkit.addRecipe(flourRecipe);
         */
+
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
 
     public void onDisable() {
