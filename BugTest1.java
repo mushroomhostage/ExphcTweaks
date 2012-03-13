@@ -35,7 +35,7 @@ import org.bukkit.*;
 
 import net.minecraft.server.CraftingManager;
 
-public class BugTest1 extends JavaPlugin {
+public class BugTest1 extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
     final int ID_WOOD_FLOUR = 1006;     // PlasticCraft
@@ -44,6 +44,8 @@ public class BugTest1 extends JavaPlugin {
     final int ID_DISH = 3704;           // Mo' Food and Crops
 
     public void onEnable() {
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+
         /* TODO
         // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
         // Override wooden plank -> wood flour (TODO), and add clay block -> dish 
@@ -61,6 +63,26 @@ public class BugTest1 extends JavaPlugin {
     }
 
     public void onDisable() {
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL) 
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+
+        // Temporary fix for quantity=0 items (infinite) picked up in fallout shelters.
+        // If players switch to/from these "infinite item" stacks, replace them with one stack
+        // https://github.com/mushroomhostage/exphc/issues/12
+        ItemStack newStack = player.getInventory().getContents()[event.getNewSlot()];
+        if (newStack != null && newStack.getType() != Material.AIR && newStack.getAmount() <= 0) {
+            newStack.setAmount(1);
+            player.getInventory().setItem(event.getNewSlot(), newStack);
+        }
+
+        ItemStack oldStack = player.getInventory().getContents()[event.getPreviousSlot()];
+        if (oldStack != null && oldStack.getType() != Material.AIR && oldStack.getAmount() <= 0) {
+            oldStack.setAmount(1);
+            player.getInventory().setItem(event.getPreviousSlot(), oldStack);
+        }
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
