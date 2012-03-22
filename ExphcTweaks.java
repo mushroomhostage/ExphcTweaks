@@ -35,11 +35,85 @@ import org.bukkit.*;
 
 import net.minecraft.server.CraftingManager;
 
+import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
+
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
 
     public void onEnable() {
+        fixPlasticCraft_MoFoods();
+
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    public void fixRealisticChat_Crafting() {
+        final Enchantment EFFICIENCY = Enchantment.DIG_SPEED;
+
+        ItemStack earTrumpetWoodItem = new ItemStack(Material.GOLD_HELMET, 1);
+        ItemStack earTrumpetLeatherItem = new ItemStack(Material.GOLD_HELMET, 1);
+        ItemStack earTrumpetIronItem = new ItemStack(Material.GOLD_HELMET, 1);
+
+        earTrumpetWoodItem.addUnsafeEnchantment(EFFICIENCY, 1);
+        earTrumpetLeatherItem.addUnsafeEnchantment(EFFICIENCY, 2);
+        earTrumpetIronItem.addUnsafeEnchantment(EFFICIENCY, 3);
+
+        ShapedRecipe earTrumpetWood = new ShapedRecipe(earTrumpetWoodItem);
+        ShapedRecipe earTrumpetLeather = new ShapedRecipe(earTrumpetLeatherItem);
+        ShapedRecipe earTrumpetIron = new ShapedRecipe(earTrumpetIronItem);
+
+         earTrumpetWood.shape(
+            "WWW",
+            "WDW");
+        earTrumpetWood.setIngredient('W', Material.WOOD);   // planks
+        earTrumpetWood.setIngredient('D', Material.DIAMOND);
+        addRecipe602(earTrumpetWood);
+
+        earTrumpetLeather.shape(
+            "LLL",
+            "LDL");
+        earTrumpetLeather.setIngredient('L', Material.LEATHER);
+        earTrumpetLeather.setIngredient('D', Material.DIAMOND);
+        addRecipe602(earTrumpetLeather);
+
+        earTrumpetIron.shape(
+            "III",
+            "IDI");
+        earTrumpetIron.setIngredient('I', Material.IRON_INGOT);
+        earTrumpetIron.setIngredient('D', Material.DIAMOND);
+        addRecipe602(earTrumpetIron);
+    }
+
+    public void addRecipe602(ShapedRecipe recipe) {
+
+        /* TODO: update for SHAPED recipes
+
+        // Workaround for 1.1-R4 https://bukkit.atlassian.net/browse/BUKKIT-602 Enchantments lost on crafting recipe output
+        ArrayList<MaterialData> ingred = recipe.getIngredientList();
+        Object[] data = new Object[ingred.size()];
+        int i = 0;
+        for (MaterialData mdata : ingred) {
+            int id = mdata.getItemTypeId();
+            byte dmg = mdata.getData();
+            data[i] = new net.minecraft.server.ItemStack(id, 1, dmg);
+            i++;
+        }
+
+        // Convert Bukkit ItemStack to net.minecraft.server.ItemStack
+        int id = recipe.getResult().getTypeId();
+        int amount = recipe.getResult().getAmount();
+        short durability = recipe.getResult().getDurability();
+        Map<Enchantment, Integer> enchantments = recipe.getResult().getEnchantments();
+        net.minecraft.server.ItemStack result = new net.minecraft.server.ItemStack(id, amount, durability);
+        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+            result.addEnchantment(CraftEnchantment.getRaw(entry.getKey()), entry.getValue().intValue());
+        }
+
+        CraftingManager.getInstance().registerShapedRecipe(result, data);
+        */
+    }
+
+    public void fixPlasticCraft_MoFoods() {
         // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
         // Add clay block -> dish, instead of wood plank -> dish
         // https://github.com/mushroomhostage/exphc/issues/2
@@ -54,8 +128,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         flourRecipe.addIngredient(Material.WOOD); //plank
         Bukkit.addRecipe(flourRecipe);
         */
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
 
     public void onDisable() {
