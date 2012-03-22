@@ -36,6 +36,7 @@ import org.bukkit.*;
 import net.minecraft.server.CraftingManager;
 
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
@@ -43,6 +44,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
     public void onEnable() {
         fixPlasticCraft_MoFoods();
+        fixRealisticChat_Crafting();
 
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
@@ -58,6 +60,14 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         earTrumpetLeatherItem.addUnsafeEnchantment(EFFICIENCY, 2);
         earTrumpetIronItem.addUnsafeEnchantment(EFFICIENCY, 3);
 
+        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(CraftItemStack.createNMSItemStack(earTrumpetWoodItem),
+            new Object[] { 
+                "WWW",
+                "WDW",
+                Character.valueOf('W'), net.minecraft.server.Block.WOOD,
+                Character.valueOf('D'), net.minecraft.server.Item.DIAMOND});
+
+    /* TODO: replace */
         ShapedRecipe earTrumpetWood = new ShapedRecipe(earTrumpetWoodItem);
         ShapedRecipe earTrumpetLeather = new ShapedRecipe(earTrumpetLeatherItem);
         ShapedRecipe earTrumpetIron = new ShapedRecipe(earTrumpetIronItem);
