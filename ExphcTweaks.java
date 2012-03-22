@@ -49,25 +49,27 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
 
+    // https://github.com/mushroomhostage/exphc/issues/17
     public void fixRealisticChat_Crafting() {
-        final Enchantment EFFICIENCY = Enchantment.DIG_SPEED;
+        final net.minecraft.server.Enchantment EFFICIENCY = net.minecraft.server.Enchantment.DIG_SPEED;
 
-        CraftItemStack earTrumpetWoodItem = new CraftItemStack(Material.GOLD_HELMET, 1);
-        CraftItemStack earTrumpetLeatherItem = new CraftItemStack(Material.GOLD_HELMET, 1);
-        CraftItemStack earTrumpetIronItem = new CraftItemStack(Material.GOLD_HELMET, 1);
+        net.minecraft.server.ItemStack earTrumpetWoodItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
+        net.minecraft.server.ItemStack earTrumpetLeatherItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
+        net.minecraft.server.ItemStack earTrumpetIronItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
 
-        earTrumpetWoodItem.addUnsafeEnchantment(EFFICIENCY, 1);
-        earTrumpetLeatherItem.addUnsafeEnchantment(EFFICIENCY, 2);
-        earTrumpetIronItem.addUnsafeEnchantment(EFFICIENCY, 3);
+        earTrumpetWoodItem.addEnchantment(EFFICIENCY, 1);
+        earTrumpetLeatherItem.addEnchantment(EFFICIENCY, 2);
+        earTrumpetIronItem.addEnchantment(EFFICIENCY, 3);
 
-        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(earTrumpetWoodItem.getHandle(),
+        // TODO: why still loses enchants?
+        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(earTrumpetWoodItem,
             new Object[] { 
                 "WWW",
                 "WDW",
                 Character.valueOf('W'), net.minecraft.server.Block.WOOD,
                 Character.valueOf('D'), net.minecraft.server.Item.DIAMOND});
 
-    /* TODO: replace */
+    /* TODO: replace 
         ShapedRecipe earTrumpetWood = new ShapedRecipe(earTrumpetWoodItem);
         ShapedRecipe earTrumpetLeather = new ShapedRecipe(earTrumpetLeatherItem);
         ShapedRecipe earTrumpetIron = new ShapedRecipe(earTrumpetIronItem);
@@ -92,41 +94,13 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         earTrumpetIron.setIngredient('I', Material.IRON_INGOT);
         earTrumpetIron.setIngredient('D', Material.DIAMOND);
         addRecipe602(earTrumpetIron);
-    }
-
-    public void addRecipe602(ShapedRecipe recipe) {
-
-        /* TODO: update for SHAPED recipes
-
-        // Workaround for 1.1-R4 https://bukkit.atlassian.net/browse/BUKKIT-602 Enchantments lost on crafting recipe output
-        ArrayList<MaterialData> ingred = recipe.getIngredientList();
-        Object[] data = new Object[ingred.size()];
-        int i = 0;
-        for (MaterialData mdata : ingred) {
-            int id = mdata.getItemTypeId();
-            byte dmg = mdata.getData();
-            data[i] = new net.minecraft.server.ItemStack(id, 1, dmg);
-            i++;
-        }
-
-        // Convert Bukkit ItemStack to net.minecraft.server.ItemStack
-        int id = recipe.getResult().getTypeId();
-        int amount = recipe.getResult().getAmount();
-        short durability = recipe.getResult().getDurability();
-        Map<Enchantment, Integer> enchantments = recipe.getResult().getEnchantments();
-        net.minecraft.server.ItemStack result = new net.minecraft.server.ItemStack(id, amount, durability);
-        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-            result.addEnchantment(CraftEnchantment.getRaw(entry.getKey()), entry.getValue().intValue());
-        }
-
-        CraftingManager.getInstance().registerShapedRecipe(result, data);
         */
     }
 
+    // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
+    // Add clay block -> dish, instead of wood plank -> dish
+    // https://github.com/mushroomhostage/exphc/issues/2
     public void fixPlasticCraft_MoFoods() {
-        // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
-        // Add clay block -> dish, instead of wood plank -> dish
-        // https://github.com/mushroomhostage/exphc/issues/2
         final int ID_DISH = 3704;           // Mo' Food and Crops
         ShapelessRecipe dishRecipe = new ShapelessRecipe(new ItemStack(ID_DISH, 2));
         dishRecipe.addIngredient(Material.CLAY);
