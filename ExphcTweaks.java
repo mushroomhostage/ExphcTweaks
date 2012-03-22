@@ -1,4 +1,4 @@
-package me.exphc.BugTest1;
+package me.exphc.ExphcTweaks;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +35,7 @@ import org.bukkit.*;
 
 import net.minecraft.server.CraftingManager;
 
-public class BugTest1 extends JavaPlugin implements Listener {
+public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
 

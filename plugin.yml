@@ -1,5 +1,5 @@
-name: BugTest1
-main: me.exphc.BugTest1.BugTest1
+name: ExphcTweaks
+main: me.exphc.ExphcTweaks.ExphcTweaks
 version: 0
 commands:
     chunk:
