@@ -147,23 +147,46 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         }
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
-        if (!cmd.getName().equalsIgnoreCase("chunk")) {
-            return false;
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockBreak(final BlockBreakEvent event) {
+        Block block = event.getBlock();
+        World world = block.getWorld();
+
+        // Fix RP2/IC2 duplicate ore drops
+        // The right way to do this is disable RP2 ores before the map is generated, but...
+        // https://github.com/mushroomhostage/exphc/issues/1
+
+        if (block.getTypeId() == 140 && block.getData() == 5) { // break RedPower copper
+            // drop IndustrialCraft copper
+            world.dropItemNaturally(block.getLocation(), new ItemStack(249, 1));
+            block.setType(Material.AIR);
+            event.setCancelled(true);
+        } else if (block.getTypeId() == 140 && block.getData() == 4) {  // break RedPower tin
+            // drop IndustrialCraft tin
+            world.dropItemNaturally(block.getLocation(), new ItemStack(248, 1));
+            block.setType(Material.AIR);
+            event.setCancelled(true);
         }
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("Must be sent by player");
             return true;
         }
         Player player = (Player)sender;
 
-        // See Bananachunk http://forums.bukkit.org/threads/fix-mech-bananachunk-v4-6-stuck-in-a-lag-hole-request-a-chunk-resend-1060.19232/page-7
-        World world = player.getWorld();
-        Chunk chunk = world.getChunkAt(player.getLocation());
-        world.refreshChunk(chunk.getX(), chunk.getZ());
+        if (cmd.getName().equalsIgnoreCase("chunk")) {
+            // See Bananachunk http://forums.bukkit.org/threads/fix-mech-bananachunk-v4-6-stuck-in-a-lag-hole-request-a-chunk-resend-1060.19232/page-7
+            World world = player.getWorld();
+            Chunk chunk = world.getChunkAt(player.getLocation());
+            world.refreshChunk(chunk.getX(), chunk.getZ());
 
-        sender.sendMessage("Chunk resent");
+            sender.sendMessage("Chunk resent");
 
-        return true;
+            return true;
+        } else {
+            return false;
+        }
     }
 }
