@@ -49,53 +49,63 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
     }
 
+    // Fix RealisticChat ear trumpet crafting in 1.1-R4
     // https://github.com/mushroomhostage/exphc/issues/17
     public void fixRealisticChat_Crafting() {
-        final net.minecraft.server.Enchantment EFFICIENCY = net.minecraft.server.Enchantment.DIG_SPEED;
+        final Enchantment EFFICIENCY = Enchantment.DIG_SPEED;
+        ItemStack earTrumpetWoodItem = new ItemStack(Material.GOLD_HELMET, 1);
+        ItemStack earTrumpetLeatherItem = new ItemStack(Material.GOLD_HELMET, 1);
+        ItemStack earTrumpetIronItem = new ItemStack(Material.GOLD_HELMET, 1);
 
-        net.minecraft.server.ItemStack earTrumpetWoodItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
-        net.minecraft.server.ItemStack earTrumpetLeatherItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
-        net.minecraft.server.ItemStack earTrumpetIronItem = new net.minecraft.server.ItemStack(Material.GOLD_HELMET.getId(), 1, 0);
+        earTrumpetWoodItem.addUnsafeEnchantment(EFFICIENCY, 1);
+        earTrumpetLeatherItem.addUnsafeEnchantment(EFFICIENCY, 2);
+        earTrumpetIronItem.addUnsafeEnchantment(EFFICIENCY, 3);
 
-        earTrumpetWoodItem.addEnchantment(EFFICIENCY, 1);
-        earTrumpetLeatherItem.addEnchantment(EFFICIENCY, 2);
-        earTrumpetIronItem.addEnchantment(EFFICIENCY, 3);
+        ShapelessRecipe earTrumpetWood = new ShapelessRecipe(earTrumpetWoodItem);
+        ShapelessRecipe earTrumpetLeather = new ShapelessRecipe(earTrumpetLeatherItem);
+        ShapelessRecipe earTrumpetIron = new ShapelessRecipe(earTrumpetIronItem);
 
-        // TODO: why still loses enchants?
-        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(earTrumpetWoodItem,
-            new Object[] { 
-                "WWW",
-                "WDW",
-                Character.valueOf('W'), net.minecraft.server.Block.WOOD,
-                Character.valueOf('D'), net.minecraft.server.Item.DIAMOND});
-
-    /* TODO: replace 
-        ShapedRecipe earTrumpetWood = new ShapedRecipe(earTrumpetWoodItem);
-        ShapedRecipe earTrumpetLeather = new ShapedRecipe(earTrumpetLeatherItem);
-        ShapedRecipe earTrumpetIron = new ShapedRecipe(earTrumpetIronItem);
-
-         earTrumpetWood.shape(
-            "WWW",
-            "WDW");
-        earTrumpetWood.setIngredient('W', Material.WOOD);   // planks
-        earTrumpetWood.setIngredient('D', Material.DIAMOND);
+        earTrumpetWood.addIngredient(5, Material.WOOD);   // planks
+        earTrumpetWood.addIngredient(1, Material.DIAMOND);
         addRecipe602(earTrumpetWood);
 
-        earTrumpetLeather.shape(
-            "LLL",
-            "LDL");
-        earTrumpetLeather.setIngredient('L', Material.LEATHER);
-        earTrumpetLeather.setIngredient('D', Material.DIAMOND);
+        earTrumpetLeather.addIngredient(5, Material.LEATHER);
+        earTrumpetLeather.addIngredient(1, Material.DIAMOND);
         addRecipe602(earTrumpetLeather);
 
-        earTrumpetIron.shape(
-            "III",
-            "IDI");
-        earTrumpetIron.setIngredient('I', Material.IRON_INGOT);
-        earTrumpetIron.setIngredient('D', Material.DIAMOND);
+        earTrumpetIron.addIngredient(5, Material.IRON_INGOT);
+        earTrumpetIron.addIngredient(1, Material.DIAMOND);
         addRecipe602(earTrumpetIron);
-        */
     }
+
+    // Workaround Bukkit bug:
+    // https://bukkit.atlassian.net/browse/BUKKIT-602 Enchantments lost on crafting recipe output
+    // CraftBukkit/src/main/java/org/bukkit/craftbukkit/inventory/CraftShapelessRecipe.java
+    // Note this 1.1-R4 workaround only works on shapeless recipes. Found this out the hard way.
+    public void addRecipe602(ShapelessRecipe recipe) {
+        ArrayList<MaterialData> ingred = recipe.getIngredientList();
+        Object[] data = new Object[ingred.size()];
+        int i = 0;
+        for (MaterialData mdata : ingred) {
+            int id = mdata.getItemTypeId();
+            byte dmg = mdata.getData();
+            data[i] = new net.minecraft.server.ItemStack(id, 1, dmg);
+            i++;
+        }
+
+        // Convert Bukkit ItemStack to net.minecraft.server.ItemStack
+        int id = recipe.getResult().getTypeId();
+        int amount = recipe.getResult().getAmount();
+        short durability = recipe.getResult().getDurability();
+        Map<Enchantment, Integer> enchantments = recipe.getResult().getEnchantments();
+        net.minecraft.server.ItemStack result = new net.minecraft.server.ItemStack(id, amount, durability);
+        for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+            result.addEnchantment(CraftEnchantment.getRaw(entry.getKey()), entry.getValue().intValue());
+        }
+
+        CraftingManager.getInstance().registerShapelessRecipe(result, data);
+    }
+
 
     // PlasticCraft and Mo' Food and Crops recipe conflict for wooden plank -> wood flour / dish
     // Add clay block -> dish, instead of wood plank -> dish
