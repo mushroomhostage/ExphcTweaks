@@ -52,15 +52,15 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     public void fixRealisticChat_Crafting() {
         final Enchantment EFFICIENCY = Enchantment.DIG_SPEED;
 
-        ItemStack earTrumpetWoodItem = new ItemStack(Material.GOLD_HELMET, 1);
-        ItemStack earTrumpetLeatherItem = new ItemStack(Material.GOLD_HELMET, 1);
-        ItemStack earTrumpetIronItem = new ItemStack(Material.GOLD_HELMET, 1);
+        CraftItemStack earTrumpetWoodItem = new CraftItemStack(Material.GOLD_HELMET, 1);
+        CraftItemStack earTrumpetLeatherItem = new CraftItemStack(Material.GOLD_HELMET, 1);
+        CraftItemStack earTrumpetIronItem = new CraftItemStack(Material.GOLD_HELMET, 1);
 
         earTrumpetWoodItem.addUnsafeEnchantment(EFFICIENCY, 1);
         earTrumpetLeatherItem.addUnsafeEnchantment(EFFICIENCY, 2);
         earTrumpetIronItem.addUnsafeEnchantment(EFFICIENCY, 3);
 
-        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(CraftItemStack.createNMSItemStack(earTrumpetWoodItem),
+        net.minecraft.server.CraftingManager.getInstance().registerShapedRecipe(earTrumpetWoodItem.getHandle(),
             new Object[] { 
                 "WWW",
                 "WDW",
