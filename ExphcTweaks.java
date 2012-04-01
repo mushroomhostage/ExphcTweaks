@@ -47,32 +47,32 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             Block block = event.getClickedBlock();
             ItemStack item = event.getItem();
 
+            // https://github.com/mushroomhostage/exphc/issues/24 AnimalBikes should be one-time use
             if (block != null && item != null && item.getTypeId() == 567) { //  AnimalBikes
-                // https://github.com/mushroomhostage/exphc/issues/24 AnimalBikes should be one-time use
                 Player player = event.getPlayer();
 
-                log.info("Player "+player.getName()+" placing AnimalBike "+item.getDurability());
+                log.info("[ExphcTweaks] [AB] Player "+player.getName()+" using AnimalBike item "+item.getDurability());
 
-                // use up bike, one-time use not infinite!
-                player.setItemInHand(null);
-
-                // TODO: only use if actually PLACED bike not removed it!
-
-                /*
-                class EmptyHandTask implements Runnable {
-                    Player player;
-
-                    public EmptyHandTask(Player player) {
-                        this.player = player;
-                    }
-
-                    public void run() {
-                        //player.setItemInHand(null);
+                boolean nearExistingBike = false;
+                List<Entity> entities = player.getNearbyEntities(10, 10, 10);
+                for (Entity entity: entities) {
+                    //log.info("near entity " + entity.getEntityId() + " of type " + entity.getType() + " = " + entity.getType().getTypeId());
+                    // Bukkit's EntityType only gives us 'UNKNOWN' for modded entities, heh, thanks
+                    if (entity.getType() == EntityType.UNKNOWN) {
+                        nearExistingBike = true;
+                        break;
                     }
                 }
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(this, new EmptyHandTask(player));
-                */
+                // If we think the player is _placing_ a bike, use it up, so it isn't infinite.
+                // This heuristic is not perfect and should really be changed in the mod itself (there may
+                // be other bikes placed by other players nearby).
+                if (!nearExistingBike) {
+                    log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently placed AnimalBike "+item.getDurability()+", clearing hand");
+                    player.setItemInHand(null);
+                } else {
+                    log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently did not place AnimalBike "+item.getDurability()+", not clearing hand");
+                }
             }
         }
     }
