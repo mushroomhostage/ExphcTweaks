@@ -2,6 +2,9 @@ name: ExphcTweaks
 main: me.exphc.ExphcTweaks.ExphcTweaks
 version: 1.2.3
 commands:
+    clear:
+        description: Clear nearby item drops
+        usage: /clear [player]
     chunk:
         description: Resend your chunk
         usage: /chunk

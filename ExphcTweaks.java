@@ -86,6 +86,35 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("clear")) {
+            if (sender instanceof Player && !((Player)sender).isOp()) {
+                return false;
+            }
+
+            Player player;
+            if (args.length < 1) {
+                if (sender instanceof Player) {
+                    player = (Player)sender;
+                } else {
+                    sender.sendMessage("Must specify player name when using /clear from console");
+                    return false;
+                }
+            } else {
+                player = Bukkit.getPlayer(args[0]);
+            }
+            double r = 200.0;
+            List<Entity> entities = player.getNearbyEntities(r, r, r);
+            int items = 0;
+            for (Entity entity: entities) {
+                if (entity instanceof Item) {
+                    entity.remove();
+                    items += 1;
+                }
+            }
+            sender.sendMessage("Removed "+items+" items out of "+entities.size()+" entities");
+            return true;
+        }
+
         if (!(sender instanceof Player)) {
             sender.sendMessage("Must be sent by player");
             return true;
