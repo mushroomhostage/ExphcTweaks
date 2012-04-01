@@ -41,6 +41,42 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
+    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock();
+            ItemStack item = event.getItem();
+
+            if (block != null && item != null && item.getTypeId() == 567) { //  AnimalBikes
+                // https://github.com/mushroomhostage/exphc/issues/24 AnimalBikes should be one-time use
+                Player player = event.getPlayer();
+
+                log.info("Player "+player.getName()+" placing AnimalBike "+item.getDurability());
+
+                // use up bike, one-time use not infinite!
+                player.setItemInHand(null);
+
+                // TODO: only use if actually PLACED bike not removed it!
+
+                /*
+                class EmptyHandTask implements Runnable {
+                    Player player;
+
+                    public EmptyHandTask(Player player) {
+                        this.player = player;
+                    }
+
+                    public void run() {
+                        //player.setItemInHand(null);
+                    }
+                }
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(this, new EmptyHandTask(player));
+                */
+            }
+        }
+    }
+
 
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
