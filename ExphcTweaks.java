@@ -92,7 +92,24 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                 return false;
             }
 
-            // TODO: option to clear ALL item entities! like ClearLagg
+            // Clear all item entities
+            if (args.length > 0 && args[0].equals("all")) {
+                for (World world: Bukkit.getWorlds()) {
+                    List<Entity> all = world.getEntities();
+
+                    //sender.sendMessage("World "+world.getName()+" total entities: " + all.size());
+                    int items = 0;
+                    for (Entity entity: all) {
+                        if (entity instanceof Item) {
+                            entity.remove();
+                            items += 1;
+                        }
+                    }
+                    sender.sendMessage("Cleared "+items+" items out of "+all.size()+" entities in "+world.getName());
+                }
+                return true;
+            }
+
 
             // Clear item entities near player
             Player player;
@@ -119,7 +136,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             return true;
         }
 
-        // Load
+        // Load a chunk by coordinates
         if (cmd.getName().equalsIgnoreCase("loadchunk")) {
             if (sender instanceof Player && !((Player)sender).isOp()) {
                 return false;

@@ -4,7 +4,7 @@ version: 1.2.3
 commands:
     clear:
         description: Clear nearby item drops
-        usage: /clear [player]
+        usage: /clear [player]|all
     loadchunk:
         description: Load a chunk
         usage: /loadchunk world x z
