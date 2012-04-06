@@ -86,11 +86,15 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+        // Clear entities
         if (cmd.getName().equalsIgnoreCase("clear")) {
             if (sender instanceof Player && !((Player)sender).isOp()) {
                 return false;
             }
 
+            // TODO: option to clear ALL item entities! like ClearLagg
+
+            // Clear item entities near player
             Player player;
             if (args.length < 1) {
                 if (sender instanceof Player) {
@@ -115,12 +119,33 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             return true;
         }
 
+        // Load
+        if (cmd.getName().equalsIgnoreCase("loadchunk")) {
+            if (sender instanceof Player && !((Player)sender).isOp()) {
+                return false;
+            }
+
+            if (args.length < 3) {
+                sender.sendMessage("Must specify world and x and z");
+                return false;
+            }
+            World world = Bukkit.getWorld(args[0]);
+            int x = Integer.parseInt(args[1]);
+            int z = Integer.parseInt(args[2]);
+
+            sender.sendMessage("Loading "+world.getName()+" x="+x+", z="+z);
+
+            world.loadChunk(x, z);
+            return true;
+        }
+
         if (!(sender instanceof Player)) {
             sender.sendMessage("Must be sent by player");
             return true;
         }
         Player player = (Player)sender;
 
+        // Resend chunk to player
         if (cmd.getName().equalsIgnoreCase("chunk")) {
             // See Bananachunk http://forums.bukkit.org/threads/fix-mech-bananachunk-v4-6-stuck-in-a-lag-hole-request-a-chunk-resend-1060.19232/page-7
             World world = player.getWorld();

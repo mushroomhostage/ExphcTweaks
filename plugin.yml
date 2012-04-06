@@ -5,6 +5,9 @@ commands:
     clear:
         description: Clear nearby item drops
         usage: /clear [player]
+    loadchunk:
+        description: Load a chunk
+        usage: /loadchunk world x z
     chunk:
         description: Resend your chunk
         usage: /chunk
