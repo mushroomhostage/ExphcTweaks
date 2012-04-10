@@ -11,3 +11,10 @@ commands:
     chunk:
         description: Resend your chunk
         usage: /chunk
+    breakballoon:
+        description: Break your hot air balloon into an item
+        usage: /breakballoon
+        aliases:
+        - breakb
+        - break
+        - bb

@@ -37,9 +37,17 @@ import net.minecraft.server.CraftingManager;
 
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
+
+    /* this doesn't handle outdated server kick message - instead patch nms NetLoginHandler
+    @EventHandler(priority=EventPriority.MONITOR) 
+    public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+        log.info("pre login: " + event + " msg="+event.getKickMessage());
+    }
+    */
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -86,6 +94,51 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+        // Break balloon into item to fix glitches
+        if (cmd.getName().equalsIgnoreCase("breakballoon")) {
+            if (!(sender instanceof Player)) {
+                // need a player to locate
+                return false;
+            }
+
+            Player player = (Player)sender;
+
+            double r = 5.0;
+            List<Entity> entities = player.getNearbyEntities(r, r, r);
+            for (Entity entity: entities) {
+                net.minecraft.server.Entity e = ((CraftEntity)entity).getHandle();
+
+                //final int HOT_AIR_BALLOON_ENTITY_ID = 38;
+                //final int HOT_AIR_BALLOON_PROP_ENTITY_ID = 39;
+
+                final int HOT_AIR_BALLOON_ITEM_ID = 3256;
+                final int HOT_AIR_BALLOON_PROPELLED_ITEM_ID = 3257;
+
+                Location location = entity.getLocation();
+                World world = location.getWorld();
+
+                if (e.toString().indexOf("HAB_EntityHotAirBalloonPropelled") != -1) { 
+                    player.sendMessage("Breaking propelled hot air balloon");
+                    ItemStack drop = new ItemStack(HOT_AIR_BALLOON_PROPELLED_ITEM_ID, 1);
+
+                    world.dropItemNaturally(location, drop);
+
+                    entity.remove();
+                } else if (e.toString().indexOf("HAB_EntityHotAirBalloon") != -1) {
+                    player.sendMessage("Breaking hot air balloon");
+
+                    ItemStack drop = new ItemStack(HOT_AIR_BALLOON_ITEM_ID, 1);
+
+                    world.dropItemNaturally(location, drop);
+
+                    entity.remove();
+
+                }
+            }
+
+            return true;
+        }
+
         // Clear entities
         if (cmd.getName().equalsIgnoreCase("clear")) {
             if (sender instanceof Player && !((Player)sender).isOp()) {
