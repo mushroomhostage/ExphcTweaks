@@ -1,6 +1,6 @@
 name: ExphcTweaks
 main: me.exphc.ExphcTweaks.ExphcTweaks
-version: 1.2.3
+version: 1.2.5
 commands:
     clear:
         description: Clear nearby item drops
@@ -18,3 +18,5 @@ commands:
         - breakb
         - break
         - bb
+softdepend:
+    - RecipeRepo
