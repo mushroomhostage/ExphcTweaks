@@ -38,6 +38,8 @@ import net.minecraft.server.CraftingManager;
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftAnimals;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
@@ -194,10 +196,11 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                     //sender.sendMessage("World "+world.getName()+" total entities: " + all.size());
                     int items = 0;
                     for (Entity entity: all) {
-                        if (entity instanceof Item) {
+                        if (entity instanceof Item || entity instanceof CraftLivingEntity || entity instanceof CraftAnimals) {
                             entity.remove();
                             items += 1;
                         }
+                        log.info("entity="+entity);
                     }
                     sender.sendMessage("Cleared "+items+" items out of "+all.size()+" entities in "+world.getName());
                 }
