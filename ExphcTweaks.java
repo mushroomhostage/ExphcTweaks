@@ -196,7 +196,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                     //sender.sendMessage("World "+world.getName()+" total entities: " + all.size());
                     int items = 0;
                     for (Entity entity: all) {
-                        if (entity instanceof Item || entity instanceof CraftLivingEntity || entity instanceof CraftAnimals) {
+                        if (entity instanceof Item) { // || entity instanceof CraftLivingEntity || entity instanceof CraftAnimals) {
                             entity.remove();
                             items += 1;
                         }
