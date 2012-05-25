@@ -53,17 +53,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Block b = event.getClickedBlock();
-        log.info("interact block="+b);
-        /*
-        if (b != null) {
-            log.info(" state="+b.getState());
-        }
-        */
-        log.info(" typeid="+b.getTypeId());
-        log.info(" block 144="+net.minecraft.server.Block.byId[144]);
-        log.info(" material 144="+Material.getMaterial(144));
-
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
             ItemStack item = event.getItem();
