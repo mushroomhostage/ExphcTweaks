@@ -18,5 +18,8 @@ commands:
         - breakb
         - break
         - bb
+    dropnether:
+        description: Drop below bedrock in The Nether
+        usage: /dropnether
 softdepend:
     - RecipeRepo

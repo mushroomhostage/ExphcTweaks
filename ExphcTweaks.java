@@ -269,6 +269,33 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             sender.sendMessage("Chunk resent");
 
             return true;
+        } else if (cmd.getName().equalsIgnoreCase("dropnether")) {
+            World world = player.getWorld();
+            if (world.getEnvironment() != World.Environment.NETHER) {
+                sender.sendMessage("This command can only be used in The Nether");
+                return true;
+            }
+
+            int y = player.getLocation().getBlockY();
+            if (y < 127) {
+                sender.sendMessage("This command can only be used when on top of The Nether, not at y="+y);
+                return true;
+            }
+
+            int x = player.getLocation().getBlockX();
+            int z = player.getLocation().getBlockZ();
+            do {
+                y -= 1;
+                int id = world.getBlockTypeIdAt(x, y, z);
+                if (id == 0 && world.getBlockTypeIdAt(x, y - 1, z) == 0) {
+                    sender.sendMessage("Dropping below to "+(y - 1)+", please standby");
+                    player.setNoDamageTicks(20 * 10);
+                    player.teleport(new Location(world, x, y - 1, z));
+                    return true;
+                }
+            } while(y > 5);
+            sender.sendMessage("No empty area below, please move and try again");
+            return true;
         } else {
             return false;
         }
