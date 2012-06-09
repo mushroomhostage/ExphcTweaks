@@ -21,5 +21,14 @@ commands:
     dropnether:
         description: Drop below bedrock in The Nether
         usage: /dropnether
+    tell:
+        description: Do not tell
+        usage: /tell
+    give:
+        description: Better to give than receive
+        usage: /give
+    tp:
+        description: tped
+        usage: /tp
 softdepend:
     - RecipeRepo

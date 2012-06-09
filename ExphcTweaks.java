@@ -137,6 +137,16 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("tell")) {
+            sender.sendMessage("To privately communicate with a player, try talking into a smartphone (clock)");
+            return true;
+        } 
+        if (cmd.getName().equalsIgnoreCase("give") ||
+            cmd.getName().equalsIgnoreCase("tp")) {
+            sender.sendMessage("-");
+            return true;
+        }
+
         // Break balloon into item to fix glitches
         if (cmd.getName().equalsIgnoreCase("breakballoon")) {
             if (!(sender instanceof Player)) {
