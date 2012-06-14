@@ -88,49 +88,8 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     }
 
 
-    final public static int THX_HELICOPTER_ID = 24256;
-    final public static int BWM_CANNON_ID = 1202;
-    final public static int BWM_MUSKET_ID = 1192;
-    final public static int BUILDCRAFT_DIAMOND_GEAR_ID = 4060;
-    final public static int IC2_CARBON_PLATE_ID = 30150;
-    final public static int IC2_UU_MATTER_ID = 30188;
-
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
-
-        ItemStack copter = new ItemStack(THX_HELICOPTER_ID, 1);
-        ShapedRecipe recipe = new ShapedRecipe(copter);
-
-        // A more balanced THX Helicopter recipe
-
-        recipe.shape(new String[] {
-            "CGM",
-            "#u#",
-            "###" });
-        recipe.setIngredient('C', Material.getMaterial(BWM_CANNON_ID));
-        recipe.setIngredient('G', Material.getMaterial(BUILDCRAFT_DIAMOND_GEAR_ID));
-        recipe.setIngredient('M', Material.getMaterial(BWM_MUSKET_ID));
-        recipe.setIngredient('#', Material.getMaterial(IC2_CARBON_PLATE_ID));
-        recipe.setIngredient('u', Material.getMaterial(IC2_UU_MATTER_ID));
-
-        Bukkit.addRecipe(recipe);
-
-        ShapedRecipe recipe2 = new ShapedRecipe(copter);
-
-        // reversed guns
-
-        recipe2.shape(new String[] {
-            "MGC",
-            "#u#",
-            "###" });
-        recipe2.setIngredient('C', Material.getMaterial(BWM_CANNON_ID));
-        recipe2.setIngredient('G', Material.getMaterial(BUILDCRAFT_DIAMOND_GEAR_ID));
-        recipe2.setIngredient('M', Material.getMaterial(BWM_MUSKET_ID));
-        recipe2.setIngredient('#', Material.getMaterial(IC2_CARBON_PLATE_ID));
-        recipe2.setIngredient('u', Material.getMaterial(IC2_UU_MATTER_ID));
-
-        Bukkit.addRecipe(recipe2);
-
     }
 
     public void onDisable() {
