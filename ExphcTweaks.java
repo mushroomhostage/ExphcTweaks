@@ -44,6 +44,23 @@ import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
+    final public static int JFM_GUTTERING_STRAIGHT = 6284;
+
+    public void onEnable() {
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+
+        // Recipe for Jammy Furniture Mod gutter to not conflict wiht WRCBE stone bowl
+        // https://github.com/mushroomhostage/exphc/issues/54
+        ShapedRecipe gutter = new ShapedRecipe(new ItemStack(JFM_GUTTERING_STRAIGHT, 6));
+        gutter.shape("   ", "S S", "SSS");
+        gutter.setIngredient('S', Material.STONE);
+        Bukkit.addRecipe(gutter);
+    }
+
+    public void onDisable() {
+    }
+
+
     /* this doesn't handle outdated server kick message - instead patch nms NetLoginHandler
     @EventHandler(priority=EventPriority.MONITOR) 
     public void onPlayerPreLogin(PlayerPreLoginEvent event) {
@@ -87,13 +104,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         }
     }
 
-
-    public void onEnable() {
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
-    }
-
-    public void onDisable() {
-    }
 
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
         if (cmd.getName().equalsIgnoreCase("tell")) {
