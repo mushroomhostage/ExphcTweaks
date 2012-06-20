@@ -45,16 +45,29 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
     final public static int JFM_GUTTERING_STRAIGHT = 6284;
+    final public static int MFR_MACHINE = 1593;
+    final public static byte MFR_ITEM_COLLECTOR_DAMAGE = 6;
+    final public static int IC2_REFINED_IRON = 30249;
+    final public static int RP2_APPLIANCE = 137;
+    final public static byte RP2_PROJECT_TABLE_DAMAGE = 3;
 
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
-        // Recipe for Jammy Furniture Mod gutter to not conflict wiht WRCBE stone bowl
+        // Recipe for Jammy Furniture Mod gutter to not conflict with WRCBE stone bowl
         // https://github.com/mushroomhostage/exphc/issues/54
         ShapedRecipe gutter = new ShapedRecipe(new ItemStack(JFM_GUTTERING_STRAIGHT, 6));
         gutter.shape("   ", "S S", "SSS");
         gutter.setIngredient('S', Material.STONE);
         Bukkit.addRecipe(gutter);
+
+        // Recipe for MineFactory Reloaded item collector to not conflict with Iron Chest
+        // https://github.com/mushroomhostage/exphc/issues/57
+        ShapedRecipe collector = new ShapedRecipe(new ItemStack(MFR_MACHINE, 1, MFR_ITEM_COLLECTOR_DAMAGE));
+        collector.shape("rrr", "rCr", "rrr");
+        collector.setIngredient('r', Material.getMaterial(IC2_REFINED_IRON));
+        collector.setIngredient('C', Material.getMaterial(RP2_APPLIANCE), RP2_PROJECT_TABLE_DAMAGE);
+        Bukkit.addRecipe(collector);
     }
 
     public void onDisable() {
