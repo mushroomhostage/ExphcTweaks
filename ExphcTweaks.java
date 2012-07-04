@@ -54,20 +54,28 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
-        // Recipe for Jammy Furniture Mod gutter to not conflict with WRCBE stone bowl
-        // https://github.com/mushroomhostage/exphc/issues/54
-        ShapedRecipe gutter = new ShapedRecipe(new ItemStack(JFM_GUTTERING_STRAIGHT, 6));
-        gutter.shape("   ", "S S", "SSS");
-        gutter.setIngredient('S', Material.STONE);
-        Bukkit.addRecipe(gutter);
+        try {
+            // Recipe for Jammy Furniture Mod gutter to not conflict with WRCBE stone bowl
+            // https://github.com/mushroomhostage/exphc/issues/54
+            ShapedRecipe gutter = new ShapedRecipe(new ItemStack(JFM_GUTTERING_STRAIGHT, 6));
+            gutter.shape("   ", "S S", "SSS");
+            gutter.setIngredient('S', Material.STONE);
+            Bukkit.addRecipe(gutter);
+        } catch (Exception e) {
+            log.warning("Not enabling alternate JFM Guttering recipe: "+e);
+        }
 
-        // Recipe for MineFactory Reloaded item collector to not conflict with Iron Chest
-        // https://github.com/mushroomhostage/exphc/issues/57
-        ShapedRecipe collector = new ShapedRecipe(new ItemStack(MFR_MACHINE, 1, MFR_ITEM_COLLECTOR_DAMAGE));
-        collector.shape("rrr", "rCr", "rrr");
-        collector.setIngredient('r', Material.getMaterial(IC2_REFINED_IRON));
-        collector.setIngredient('C', Material.getMaterial(RP2_APPLIANCE), RP2_PROJECT_TABLE_DAMAGE);
-        Bukkit.addRecipe(collector);
+        try {
+            // Recipe for MineFactory Reloaded item collector to not conflict with Iron Chest
+            // https://github.com/mushroomhostage/exphc/issues/57
+            ShapedRecipe collector = new ShapedRecipe(new ItemStack(MFR_MACHINE, 1, MFR_ITEM_COLLECTOR_DAMAGE));
+            collector.shape("rrr", "rCr", "rrr");
+            collector.setIngredient('r', Material.getMaterial(IC2_REFINED_IRON));
+            collector.setIngredient('C', Material.getMaterial(RP2_APPLIANCE), RP2_PROJECT_TABLE_DAMAGE);
+            Bukkit.addRecipe(collector);
+        } catch (Exception e) {
+            log.warning("Not enabling alterate MFR collector recipe: "+e);
+        }
     }
 
     public void onDisable() {
@@ -88,6 +96,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             ItemStack item = event.getItem();
 
             // https://github.com/mushroomhostage/exphc/issues/24 AnimalBikes should be one-time use
+            // TODO: I think this is broken in 1.2.5.. was working in 1.2.3. maybe change to increase counter, up to limit? https://github.com/mushroomhostage/exphc/issues/53
             if (block != null && item != null && item.getTypeId() == 567) { //  AnimalBikes
                 Player player = event.getPlayer();
 
@@ -113,6 +122,19 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                 } else {
                     log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently did not place AnimalBike "+item.getDurability()+", not clearing hand");
                 }
+            }
+
+            // EnderStorage chests crash client due to server bug
+            // see https://gist.github.com/3045581
+            // present in enderstorage-server-1.1.3-bukkit-mcpc-1.2.5.zip
+            // fixed but need to update TODO: remove once updated server!
+            if (block != null && block.getTypeId() == 1666) { // EnderStorage chests (custom)
+                Player player = event.getPlayer();
+
+                player.sendMessage("Sorry, opening ender chests temporarily disabled due to crashes");
+                event.setCancelled(true);
+                // TODO: pouches, too..
+                return;
             }
         }
     }
