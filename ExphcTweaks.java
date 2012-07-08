@@ -123,19 +123,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                     log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently did not place AnimalBike "+item.getDurability()+", not clearing hand");
                 }
             }
-
-            // EnderStorage chests crash client due to server bug
-            // see https://gist.github.com/3045581
-            // present in enderstorage-server-1.1.3-bukkit-mcpc-1.2.5.zip
-            // fixed but need to update TODO: remove once updated server!
-            if (block != null && block.getTypeId() == 1666) { // EnderStorage chests (custom)
-                Player player = event.getPlayer();
-
-                player.sendMessage("Sorry, opening ender chests temporarily disabled due to crashes");
-                event.setCancelled(true);
-                // TODO: pouches, too..
-                return;
-            }
         }
     }
 
