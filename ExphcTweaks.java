@@ -95,33 +95,13 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             Block block = event.getClickedBlock();
             ItemStack item = event.getItem();
 
-            // https://github.com/mushroomhostage/exphc/issues/24 AnimalBikes should be one-time use
-            // TODO: I think this is broken in 1.2.5.. was working in 1.2.3. maybe change to increase counter, up to limit? https://github.com/mushroomhostage/exphc/issues/53
-            if (block != null && item != null && item.getTypeId() == 567) { //  AnimalBikes
+            // AnimalBikes broken in 1.2.5rev4
+            if (block != null && item != null && 
+                (item.getTypeId() >= 27016 && item.getTypeId() <= 27033)) { //  AnimalBikes
                 Player player = event.getPlayer();
 
-                log.info("[ExphcTweaks] [AB] Player "+player.getName()+" using AnimalBike item "+item.getDurability());
-
-                boolean nearExistingBike = false;
-                List<Entity> entities = player.getNearbyEntities(10, 10, 10);
-                for (Entity entity: entities) {
-                    //log.info("near entity " + entity.getEntityId() + " of type " + entity.getType() + " = " + entity.getType().getTypeId());
-                    // Bukkit's EntityType only gives us 'UNKNOWN' for modded entities, heh, thanks
-                    if (entity.getType() == EntityType.UNKNOWN) {
-                        nearExistingBike = true;
-                        break;
-                    }
-                }
-
-                // If we think the player is _placing_ a bike, use it up, so it isn't infinite.
-                // This heuristic is not perfect and should really be changed in the mod itself (there may
-                // be other bikes placed by other players nearby).
-                if (!nearExistingBike) {
-                    log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently placed AnimalBike "+item.getDurability()+", clearing hand");
-                    player.setItemInHand(null);
-                } else {
-                    log.info("[ExphcTweaks] [AB] Player "+player.getName()+" apparently did not place AnimalBike "+item.getDurability()+", not clearing hand");
-                }
+                player.sendMessage("Sorry, animal bikes are out of service! Tired of giving free rides to everyone.");
+                player.sendMessage("Try making a GraviChestPlate instead.");
             }
         }
     }
