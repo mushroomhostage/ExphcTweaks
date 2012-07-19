@@ -81,7 +81,8 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     public void onDisable() {
     }
 
-    // TODO: remove - for testing
+    /*
+    // dump tag count on item change
     @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
@@ -97,10 +98,12 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         if (item instanceof CraftItemStack) {
             net.minecraft.server.ItemStack raw = ((CraftItemStack)item).getHandle();
             log.info(" tags="+raw.tag);
+            // TODO: dump http://mcportcentral.co.za/wiki/index.php?title=Common_decompilation_errors#Dump_the_contents_of_a_NBTTagCompound
         } else {
             log.info(" not a CraftItemStack");
         }
     }
+    */
 
 
     /* this doesn't handle outdated server kick message - instead patch nms NetLoginHandler
