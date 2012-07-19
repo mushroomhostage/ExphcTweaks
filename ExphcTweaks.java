@@ -81,6 +81,27 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     public void onDisable() {
     }
 
+    // TODO: remove - for testing
+    @EventHandler(priority=EventPriority.MONITOR)
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        int slot = event.getNewSlot();
+        log.info("item held slot =  "+slot+" from "+player);
+
+        ItemStack item = player.getInventory().getContents()[slot];
+        if (item == null) {
+            return;
+        }
+
+        log.info(" item="+item);
+        if (item instanceof CraftItemStack) {
+            net.minecraft.server.ItemStack raw = ((CraftItemStack)item).getHandle();
+            log.info(" tags="+raw.tag);
+        } else {
+            log.info(" not a CraftItemStack");
+        }
+    }
+
 
     /* this doesn't handle outdated server kick message - instead patch nms NetLoginHandler
     @EventHandler(priority=EventPriority.MONITOR) 
