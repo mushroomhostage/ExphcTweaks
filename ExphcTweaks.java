@@ -1,5 +1,6 @@
 package me.exphc.ExphcTweaks;
 
+import java.util.Random;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     final public static int IC2_REFINED_IRON = 30249;
     final public static int RP2_APPLIANCE = 137;
     final public static byte RP2_PROJECT_TABLE_DAMAGE = 3;
+
+    Random random = new Random();
 
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
@@ -126,6 +129,47 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
                 player.sendMessage("Sorry, animal bikes are out of service! Tired of giving free rides to everyone.");
                 player.sendMessage("Try making a GraviChestPlate instead.");
+            }
+        }
+    }
+
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        Player player = event.getPlayer();
+        ItemStack item = player.getItemInHand();
+
+        if (item == null) {
+            return;
+        }
+       
+        // Right-clicking ocelot with any Aquaculture fish instantly tames it
+        if ((item.getTypeId() >= 23259 &&  // Aquaculture blue gill
+            item.getTypeId() <= 23276) ||   // muskellunge
+            (item.getTypeId() >= 23294 &&   // pollock
+            item.getTypeId() <= 23299)) {   // bagrid
+
+            if (entity instanceof Ocelot) {
+                Ocelot cat = (Ocelot)entity;
+
+                if (!cat.isTamed()) {
+                    log.info("Aquaculture fish"+item+" from "+player+" tamed ocelot");
+                    cat.setOwner(player);
+
+                    Ocelot.Type type;
+
+                    // Choose random tamed cat type with equal probability
+                    // Note this differs from http://www.minecraftwiki.net/wiki/Ocelot#Taming
+                    switch(random.nextInt(3)) {
+                    case 0: type = Ocelot.Type.BLACK_CAT; break;
+                    case 1: type = Ocelot.Type.RED_CAT; break;
+                    default:
+                    case 2: type = Ocelot.Type.SIAMESE_CAT; break;
+                    // Interestingly, you can keep type as wild ocelot but tame it..
+                    }
+
+                    cat.setCatType(type);
+                }
             }
         }
     }
