@@ -70,26 +70,71 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
         try {
             // Thermal Expansion sawmill
-            // missing log 17:4 - somehow I get this
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(net.minecraft.server.Block.LOG.id, 4, new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 4), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
 
             // Trees++
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(131, 0, new net.minecraft.server.ItemStack(131, 6, 2)); // crystal log -> 6 crystal plank
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(131, 1, new net.minecraft.server.ItemStack(131, 6, 3)); // dark crystal log -> 6 dark crystal plank
+            int crystalWood = 131;
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 0, new net.minecraft.server.ItemStack(crystalWood, 6, 2)); // crystal log -> 6 crystal plank, no sawdust
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 1, new net.minecraft.server.ItemStack(crystalWood, 6, 3)); // dark crystal log -> 6 dark crystal plank, no sawdust
+            /*
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(172, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(173, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(174, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
+            */
+
+            int newLogs = 172, newLogs2 = 173, newLogs3 = 174, newPlanks = 184;
+
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs, 1, 1));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 6), new net.minecraft.server.ItemStack(newLogs, 1, 3));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs, 1, 5));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 7), new net.minecraft.server.ItemStack(newLogs, 1, 7));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 8), new net.minecraft.server.ItemStack(newLogs, 1, 9));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 6), new net.minecraft.server.ItemStack(newLogs, 1, 11));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 10), new net.minecraft.server.ItemStack(newLogs, 1, 13));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs, 1, 15));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 1));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 3));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 5));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 7));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 9));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 0), new net.minecraft.server.ItemStack(newLogs2, 1, 11));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 0), new net.minecraft.server.ItemStack(newLogs2, 1, 13));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs2, 1, 15));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 0), new net.minecraft.server.ItemStack(newLogs3, 1, 1));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 3), new net.minecraft.server.ItemStack(newLogs3, 1, 3));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 5), new net.minecraft.server.ItemStack(newLogs3, 1, 5));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 4), new net.minecraft.server.ItemStack(newLogs3, 1, 7));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(newPlanks, 6, 9), new net.minecraft.server.ItemStack(newLogs3, 1, 9));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 0), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 4)); // vanilla id 17, more metadata
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 1), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 5));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 2), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 6));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 3), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 7));
 
             // Bunyan
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(421, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            //addTXCuttingRecipe // turnable.wood.alt.id = 421, not needed, only a block not meant as an item
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 0), new net.minecraft.server.ItemStack(422, 1, 0)); /// vanilla.wood.alt.id
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 1), new net.minecraft.server.ItemStack(422, 1, 1));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 2), new net.minecraft.server.ItemStack(422, 1, 2));
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 3), new net.minecraft.server.ItemStack(422, 1, 3));
+            //addTXCuttingRecipe widewood 423,424 = quarter logs, also not needed
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(420, 6, 1), new net.minecraft.server.ItemStack(426, 1, 1)); // fir log -> fir planks
+            addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(420, 6, 2), new net.minecraft.server.ItemStack(426, 1, 2)); // acacia log -> acacia planks
+
+
+    /*
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(422, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(423, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(424, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(425, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(426, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            */
         } catch (Exception e) {
             log.warning("Not adding Thermal Expansion cutting recipes: "+e);
         }
+    }
+
+    public void addTXLogCuttingRecipe(net.minecraft.server.ItemStack output, net.minecraft.server.ItemStack input) {
+        net.minecraft.server.ItemStack byproduct = new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5); // sawdust
+        cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(input.id, input.getData(), output, byproduct);
     }
 
     public void onDisable() {
