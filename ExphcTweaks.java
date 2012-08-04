@@ -68,6 +68,17 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             log.warning("Not enabling alternate JFM Guttering recipe: "+e);
         }
 
+
+        try {
+            // NetherOres missing macerator recipes
+            // https://github.com/mushroomhostage/exphc/issues/76
+            ic2.api.Ic2Recipes.addMaceratorRecipe(new net.minecraft.server.ItemStack(127, 1, 2), new net.minecraft.server.ItemStack(net.minecraft.server.Block.GOLD_ORE, 2, 1)); // nether gold ore -> 2 x gold ore
+            ic2.api.Ic2Recipes.addMaceratorRecipe(new net.minecraft.server.ItemStack(127, 1, 3), new net.minecraft.server.ItemStack(net.minecraft.server.Block.IRON_ORE, 2, 1)); // nether iron ore -> 2 x iron ore
+        } catch (Exception e) {
+            log.warning("Not adding NetherOres macerator recipes: "+e);
+        }
+
+
         try {
             // Thermal Expansion sawmill
 
@@ -125,6 +136,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         }
     }
 
+    // add thermal expansion sawmill recipe
     public void addTXLogCuttingRecipe(net.minecraft.server.ItemStack output, net.minecraft.server.ItemStack input) {
         net.minecraft.server.ItemStack byproduct = new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5); // sawdust
         cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(input.id, input.getData(), output, byproduct);
