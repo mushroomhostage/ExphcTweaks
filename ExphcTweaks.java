@@ -46,8 +46,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
     final public static int JFM_GUTTERING_STRAIGHT = 6284;
-    final public static int MFR_MACHINE = 1593;
-    final public static byte MFR_ITEM_COLLECTOR_DAMAGE = 6;
     final public static int IC2_REFINED_IRON = 30249;
     final public static int RP2_APPLIANCE = 137;
     final public static byte RP2_PROJECT_TABLE_DAMAGE = 3;
@@ -68,17 +66,6 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             log.warning("Not enabling alternate JFM Guttering recipe: "+e);
         }
 
-        try {
-            // Recipe for MineFactory Reloaded item collector to not conflict with Iron Chest
-            // https://github.com/mushroomhostage/exphc/issues/57
-            ShapedRecipe collector = new ShapedRecipe(new ItemStack(MFR_MACHINE, 1, MFR_ITEM_COLLECTOR_DAMAGE));
-            collector.shape("rrr", "rCr", "rrr");
-            collector.setIngredient('r', Material.getMaterial(IC2_REFINED_IRON));
-            collector.setIngredient('C', Material.getMaterial(RP2_APPLIANCE), RP2_PROJECT_TABLE_DAMAGE);
-            Bukkit.addRecipe(collector);
-        } catch (Exception e) {
-            log.warning("Not enabling alterate MFR collector recipe: "+e);
-        }
     }
 
     public void onDisable() {
