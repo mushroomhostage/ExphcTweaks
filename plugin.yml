@@ -1,6 +1,6 @@
 name: ExphcTweaks
 main: me.exphc.ExphcTweaks.ExphcTweaks
-version: 1.2.5rev4
+version: 1.2.5rev5
 commands:
     clear:
         description: Clear nearby item drops

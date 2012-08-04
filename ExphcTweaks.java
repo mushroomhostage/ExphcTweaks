@@ -42,6 +42,8 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftAnimals;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 
+import net.minecraft.server.ThermalExpansionCore;
+
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
@@ -66,6 +68,28 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             log.warning("Not enabling alternate JFM Guttering recipe: "+e);
         }
 
+        try {
+            // Thermal Expansion sawmill
+            // missing log 17:4 - somehow I get this
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(net.minecraft.server.Block.LOG.id, 4, new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 4), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+
+            // Trees++
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(131, 0, new net.minecraft.server.ItemStack(131, 6, 2)); // crystal log -> 6 crystal plank
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(131, 1, new net.minecraft.server.ItemStack(131, 6, 3)); // dark crystal log -> 6 dark crystal plank
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(172, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(173, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(174, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5)); // other Trees++ wood -> 6 plank
+
+            // Bunyan
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(421, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(422, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(423, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(424, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(425, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(426, new net.minecraft.server.ItemStack(5, 6, 0), new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5));
+        } catch (Exception e) {
+            log.warning("Not adding Thermal Expansion cutting recipes: "+e);
+        }
     }
 
     public void onDisable() {
