@@ -90,7 +90,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             // https://github.com/mushroomhostage/exphc/issues/54
             int guttering_straight = 6284;
             ShapedRecipe gutter = new ShapedRecipe(new ItemStack(guttering_straight, 6));
-            gutter.shape("   ", "S S", "SSS");
+            gutter.shape("S S", "SSS");
             gutter.setIngredient('S', Material.STONE);
             Bukkit.addRecipe(gutter);
         } catch (Exception e) {
