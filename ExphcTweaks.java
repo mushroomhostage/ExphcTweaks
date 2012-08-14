@@ -47,20 +47,35 @@ import net.minecraft.server.ThermalExpansionCore;
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
 
-    final public static int JFM_GUTTERING_STRAIGHT = 6284;
-    final public static int IC2_REFINED_IRON = 30249;
-    final public static int RP2_APPLIANCE = 137;
-    final public static byte RP2_PROJECT_TABLE_DAMAGE = 3;
-
     Random random = new Random();
 
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
+        int crystalWood = 131;
+        int newLogs = 172, newLogs2 = 173, newLogs3 = 174, newPlanks = 184;
+
+        try {
+            // Trees++ new planks crafting should output sign item, not signpost block
+            // https://github.com/mushroomhostage/exphc/issues/89
+            for (short i = 0; i < 11; i += 1) {
+                ShapedRecipe sign = new ShapedRecipe(new ItemStack(323 /* sign item */, 1));
+                sign.shape("&&&", "&&&", " * ");
+
+                sign.setIngredient('&', Material.getMaterial(newPlanks), i);
+                sign.setIngredient('*', Material.STICK);
+
+                Bukkit.addRecipe(sign);
+            }
+        } catch (Exception e) {
+            log.warning("Not fixing Trees++ sign recipes: "+e);
+        }
+
         try {
             // Recipe for Jammy Furniture Mod gutter to not conflict with WRCBE stone bowl
             // https://github.com/mushroomhostage/exphc/issues/54
-            ShapedRecipe gutter = new ShapedRecipe(new ItemStack(JFM_GUTTERING_STRAIGHT, 6));
+            int guttering_straight = 6284;
+            ShapedRecipe gutter = new ShapedRecipe(new ItemStack(guttering_straight, 6));
             gutter.shape("   ", "S S", "SSS");
             gutter.setIngredient('S', Material.STONE);
             Bukkit.addRecipe(gutter);
@@ -78,16 +93,21 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             log.warning("Not adding NetherOres macerator recipes: "+e);
         }
 
+        // TODO: fix this..doesn't seem to work reliably. see https://github.com/mushroomhostage/exphc/issues/82
+        try {
+            // 17:4 = 17:0 wood (vanilla oak) but sometimes dropped by Trees++
+            forestry.api.recipes.RecipeManagers.carpenterManager.addCrating(new net.minecraft.server.ItemStack(17, 1, 4), new net.minecraft.server.ItemStack(forestry.core.config.ForestryItem.cratedWood));
+        } catch (Exception e) {
+            log.warning("Not adding Forestry crating recipe for Trees++ oak: "+e);
+        }
+
 
         try {
             // Thermal Expansion sawmill
 
             // Trees++
-            int crystalWood = 131;
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 0, new net.minecraft.server.ItemStack(crystalWood, 6, 2)); // crystal log -> 6 crystal plank, no sawdust
             cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 1, new net.minecraft.server.ItemStack(crystalWood, 6, 3)); // dark crystal log -> 6 dark crystal plank, no sawdust
-
-            int newLogs = 172, newLogs2 = 173, newLogs3 = 174, newPlanks = 184;
 
             // first add vanilla planks for all logs
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs, 1, -1));
