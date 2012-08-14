@@ -56,6 +56,20 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         int newLogs = 172, newLogs2 = 173, newLogs3 = 174, newPlanks = 184;
 
         try {
+            // Trees++ glass cup craft with glass panes instead of glass blocks, to fix conflict
+            // with Mo' Creatures fish bowl - https://github.com/mushroomhostage/exphc/issues/90
+            final int glass_cup = 20003;
+            final int fish_bowl = 11700;
+
+            ShapedRecipe cupRecipe = new ShapedRecipe(new ItemStack(glass_cup, 3)); // only craft 3 (not 6), since 6 glass block -> 12 class pane
+            cupRecipe.shape("G G", "G G", "GGG");
+            cupRecipe.setIngredient('G', Material.THIN_GLASS);
+            Bukkit.addRecipe(cupRecipe);
+        } catch (Exception e) {
+            log.warning("Not adding Trees++ glass cup recipe: "+e);
+        }
+
+        try {
             // Trees++ new planks crafting should output sign item, not signpost block
             // https://github.com/mushroomhostage/exphc/issues/89
             for (short i = 0; i < 11; i += 1) {
