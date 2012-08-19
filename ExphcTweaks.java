@@ -22,6 +22,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.*;
 import org.bukkit.Material.*;
 import org.bukkit.material.*;
 import org.bukkit.block.*;
@@ -210,6 +211,39 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         log.info("pre login: " + event + " msg="+event.getKickMessage());
     }
     */
+
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void onInventoryClick(InventoryClickEvent event) {
+        InventoryView view = event.getView();
+
+        if (view instanceof forge.bukkit.ModInventoryView) {
+            forge.bukkit.ModInventoryView modView = (forge.bukkit.ModInventoryView)view;
+
+            try {
+                Field containerField = forge.bukkit.ModInventoryView.class.getDeclaredField("container");
+
+                containerField.setAccessible(true);
+
+                net.minecraft.server.Container container = (net.minecraft.server.Container)containerField.get(modView);
+
+                if (container.toString().startsWith("net.minecraft.server.SeedLibraryContainer")) {
+                    // workaround StackOverflowError server crash when shift-clicking Seed Manager seed library
+                    // full trace at https://gist.github.com/3320967
+                    // see also discussion at http://forum.industrial-craft.net/index.php?page=Thread&threadID=5152&pageNo=4&s=957223de1bda4e0d67315c3ea5053163188f05eb
+                    if (event.isShiftClick()) {
+                        log.info("preventing Seed Library shift-click crash");
+                        event.setCancelled(true);
+                        event.setResult(Event.Result.DENY);
+                    }
+
+                }
+
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+
+    }
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent event) {
