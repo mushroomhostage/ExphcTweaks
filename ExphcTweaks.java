@@ -245,6 +245,29 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
     }
 
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() != null && event.getEntity() instanceof Player) {
+            Player player = (Player)event.getEntity();
+            log.info(" player="+player);
+
+            PlayerInventory playerInventory = player.getInventory();
+            ItemStack helmet = playerInventory.getHelmet();
+            ItemStack chestplate = playerInventory.getChestplate();
+            ItemStack leggings = playerInventory.getLeggings();
+            ItemStack boots = playerInventory.getBoots();
+
+            if (boots != null && boots.getTypeId() == 30171) { // IC2 QuantumSuit boots
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                    // Curiously, cancelling the event cancels the fall effect! 
+                    //event.setCancelled(true);
+                    // TODO: subtract IC2 charge
+                }
+            }
+            // TODO: https://github.com/mushroomhostage/exphc/issues/91 ?
+        }
+    }
+
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
