@@ -244,12 +244,11 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         }
 
     }
-
+/*
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() != null && event.getEntity() instanceof Player) {
             Player player = (Player)event.getEntity();
-            log.info(" player="+player);
 
             PlayerInventory playerInventory = player.getInventory();
             ItemStack helmet = playerInventory.getHelmet();
@@ -266,7 +265,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             }
             // TODO: https://github.com/mushroomhostage/exphc/issues/91 ?
         }
-    }
+    }*/
 
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent event) {
