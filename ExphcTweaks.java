@@ -289,6 +289,34 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if (event.getResult() != null) {
+            final Player player = event.getPlayer();
+            if (player != null) {
+                PlayerInventory inventory = player.getInventory();
+                if (inventory != null) {
+                    // Radioactive items in inventory decay on relog
+                    for (int i = 0; i < inventory.getSize(); i += 1) {
+                        ItemStack item = inventory.getItem(i);
+
+                        if (item != null && (item.getTypeId() == 237 || item.getTypeId() == 30244)) { // IC2 nuke, refined uranium
+                            inventory.clear(i);
+
+                            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
+                                this,
+                                new Runnable() {
+                                    public void run() {
+                                        player.sendMessage("Radioactive material spontaneously decayed");
+                                    }
+                                });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
