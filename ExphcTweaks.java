@@ -156,6 +156,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 2), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 6));
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 3), new net.minecraft.server.ItemStack(net.minecraft.server.Block.LOG, 1, 7));
 
+            /* not in rev6
             // Bunyan
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(421, 1, -1)); // turnable.wood.alt.id = 421, not normally obtainable
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6, 0), new net.minecraft.server.ItemStack(422, 1, 0)); /// vanilla.wood.alt.id
@@ -167,6 +168,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(420, 6, 0), new net.minecraft.server.ItemStack(426, 1, -1)); // other wood
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(420, 6, 1), new net.minecraft.server.ItemStack(426, 1, 1)); // fir log -> fir planks
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(420, 6, 2), new net.minecraft.server.ItemStack(426, 1, 2)); // acacia log -> acacia planks
+            */
         } catch (Exception e) {
             log.warning("Not adding Thermal Expansion cutting recipes: "+e);
         }
