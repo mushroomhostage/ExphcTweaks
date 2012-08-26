@@ -253,13 +253,22 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         if (human != null && human instanceof Player) {
             Player player = (Player)human;
 
-            /* TODO: is checking the inventory window feasible? (vs player inventory
+            if ((event.getCursor() != null && isRadioactive(event.getCursor())) ||
+                (event.getCurrentItem() != null && isRadioactive(event.getCurrentItem()))) {
+                player.sendMessage("DANGER - RADIATION!");
+
+                radiationDamage(player);
+            } 
+
+            // would have liked to start radiation timer, but it isn't in actual player inventory yet
+
+            /* 
             Inventory bottomInventory = event.getBottomInventory();
             if (bottomInventory != null) {
                 if (hasRadioactive(bottomInventory)) {
 
                 // took radioactive item from chest?
-                // TODO: this actually can't check the player inventory just yet since it isn't updated
+                // - this actually can't check the player inventory just yet since it isn't updated
                 // it needs to instead check the bottom inventory view
                 applyRadiation(player);
             }
@@ -300,22 +309,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         if (isHoldingRadioactive(player)) {
             player.sendMessage("Radioactive material held"); 
 
-            int health = player.getHealth();
-
-            //player.damage(0); // lame Bukkit wrapper doesn't allow custom DamageSource - 
-            // .. setLastDamageCause, takes event which has http://jd.bukkit.org/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-            net.minecraft.server.Entity entity = ((CraftEntity)player).getHandle();
-            entity.damageEntity(ic2.common.IC2DamageSource.radiation, 1);
-
-          
-            // fixed 1/2 heart health decrement
-            health -= 1; 
-            if (health <= 0) {
-                // TODO
-            }
-
-            player.setHealth(health);
-
+            radiationDamage(player);
            
             long ticksNextCheck = 20;
 
@@ -329,6 +323,28 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                         }
                     }, ticksNextCheck);
         }
+    }
+
+    public void radiationDamage(Player player) {
+        int health = player.getHealth();
+
+        //player.damage(0); // lame Bukkit wrapper doesn't allow custom DamageSource - 
+        // .. setLastDamageCause, takes event which has http://jd.bukkit.org/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+        net.minecraft.server.Entity entity = ((CraftEntity)player).getHandle();
+        entity.damageEntity(ic2.common.IC2DamageSource.radiation, 1);
+
+      
+        // fixed 1/2 heart health decrement
+        health -= 1; 
+        if (health <= 0) {
+            // finish 'em off
+            entity.damageEntity(ic2.common.IC2DamageSource.radiation, 9000);
+            return;
+        }
+
+        player.setHealth(health);
+
+
     }
 
     // Return whether player is holding radioactive material
