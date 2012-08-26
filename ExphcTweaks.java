@@ -253,52 +253,81 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
         if (human != null && human instanceof Player) {
             Player player = (Player)human;
 
-            // took radioactive item from chest?
-            // TODO: this actually can't check the player inventory just yet since it isn't updated
-            // it needs to instead check the bottom inventory view
-            applyRadiation(player);
+            /* TODO: is checking the inventory window feasible? (vs player inventory
+            Inventory bottomInventory = event.getBottomInventory();
+            if (bottomInventory != null) {
+                if (hasRadioactive(bottomInventory)) {
 
+                // took radioactive item from chest?
+                // TODO: this actually can't check the player inventory just yet since it isn't updated
+                // it needs to instead check the bottom inventory view
+                applyRadiation(player);
+            }
+            */
+        }
+    }
+
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        HumanEntity human = event.getPlayer();
+        if (human != null && human instanceof Player) {
+            Player player = (Player)human;
+
+            applyRadiation(player);
         }
     }
 
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
     public void playerPickupItem(PlayerPickupItemEvent event) {
         if (event.getPlayer() != null) {
-            // picked up radioactive material?
-            applyRadiation(event.getPlayer());
+            final Player player = event.getPlayer();
+            if (isRadioactive(event.getItem().getItemStack())) {
+                // picked up radioactive material?
+                // Run this _after_ the event, so they'll have picked it up by then
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
+                        this,
+                        new Runnable() {
+                            public void run() {
+                                applyRadiation(player);
+                            }
+                        });
+            }
         }
     }
 
     // Radiate the player if they are holding radioactive material
     public void applyRadiation(final Player player) {
         if (isHoldingRadioactive(player)) {
+            player.sendMessage("Radioactive material held"); 
+
+            int health = player.getHealth();
+
+            //player.damage(0); // lame Bukkit wrapper doesn't allow custom DamageSource - 
+            // .. setLastDamageCause, takes event which has http://jd.bukkit.org/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+            net.minecraft.server.Entity entity = ((CraftEntity)player).getHandle();
+            entity.damageEntity(ic2.common.IC2DamageSource.radiation, 1);
+
+          
+            // fixed 1/2 heart health decrement
+            health -= 1; 
+            if (health <= 0) {
+                // TODO
+            }
+
+            player.setHealth(health);
+
+           
+            long ticksNextCheck = 20;
+
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
                     this,
                     new Runnable() {
                         public void run() {
                             if (isHoldingRadioactive(player)) {
-                                player.sendMessage("Radioactive material held"); 
-
-                                int health = player.getHealth();
-
-                                //player.damage(0); // lame Bukkit wrapper doesn't allow custom DamageSource - 
-                                // .. setLastDamageCause, takes event which has http://jd.bukkit.org/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-                                net.minecraft.server.Entity entity = ((CraftEntity)player).getHandle();
-                                entity.damageEntity(ic2.common.IC2DamageSource.radiation, 1);
-
-                              
-                                // fixed 1/2 heart health decrement
-                                health -= 1; 
-                                if (health <= 0) {
-                                    // TODO
-                                }
-
-                                player.setHealth(health);
-
                                 applyRadiation(player);
                             }
                         }
-                    }, 20);
+                    }, ticksNextCheck);
         }
     }
 
@@ -306,17 +335,26 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
     public boolean isHoldingRadioactive(Player player) {
         PlayerInventory inventory = player.getInventory();
 
+        ItemStack item = hasRadioactive(inventory);
+        if (item != null) {
+            log.info("Player "+player.getName()+" holding radioactive item: " + item);
+        }
+
+        return item != null;
+    }
+
+    // Return radioactive item player is holding, or null if nothing
+    public ItemStack hasRadioactive(Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i += 1) {
             ItemStack item = inventory.getItem(i);
 
             if (item != null && isRadioactive(item)) {
-                log.info("Player "+player.getName()+" holding radioactive item: " + item);
-                return true;
+                return item;
             }
-            log.info("Player not radioactive: " + item);
         }
 
-        return false;
+        return null;
+
     }
 /*
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
