@@ -43,7 +43,6 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftAnimals;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 
-import net.minecraft.server.ThermalExpansionCore;
 
 public class ExphcTweaks extends JavaPlugin implements Listener {
     Logger log = Logger.getLogger("Minecraft");
@@ -121,8 +120,10 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             // Thermal Expansion sawmill
 
             // Trees++
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 0, new net.minecraft.server.ItemStack(crystalWood, 6, 2)); // crystal log -> 6 crystal plank, no sawdust
-            cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(crystalWood, 1, new net.minecraft.server.ItemStack(crystalWood, 6, 3)); // dark crystal log -> 6 dark crystal plank, no sawdust
+            cofh.thermalexpansion.api.recipes.TE_RecipeAPI.sawmillManager.addRecipe(
+                new net.minecraft.server.ItemStack(crystalWood, 1, 0), new net.minecraft.server.ItemStack(crystalWood, 6, 2)); // crystal log -> 6 crystal plank, no sawdust
+            cofh.thermalexpansion.api.recipes.TE_RecipeAPI.sawmillManager.addRecipe(
+                new net.minecraft.server.ItemStack(crystalWood, 1, 1), new net.minecraft.server.ItemStack(crystalWood, 6, 3)); // dark crystal log -> 6 dark crystal plank, no sawdust
 
             // first add vanilla planks for all logs
             addTXLogCuttingRecipe(new net.minecraft.server.ItemStack(net.minecraft.server.Block.WOOD, 6), new net.minecraft.server.ItemStack(newLogs, 1, -1));
@@ -173,8 +174,10 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
 
     // add thermal expansion sawmill recipe
     public void addTXLogCuttingRecipe(net.minecraft.server.ItemStack output, net.minecraft.server.ItemStack input) {
-        net.minecraft.server.ItemStack byproduct = new net.minecraft.server.ItemStack(ThermalExpansionCore.mineralItem, 1, 5); // sawdust
-        cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(input.id, input.getData(), output, byproduct);
+        net.minecraft.server.ItemStack byproduct = new net.minecraft.server.ItemStack(28256, 1, 5); // sawdust
+
+        cofh.thermalexpansion.api.recipes.TE_RecipeAPI.sawmillManager.addRecipe(input, output, byproduct);
+        //cofh.thermalexpansion.core.RecipeManager.masterList.addCutting(input.id, input.getData(), output, byproduct);
     }
 
     public void onDisable() {
