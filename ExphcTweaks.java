@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftAnimals;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 
 public class ExphcTweaks extends JavaPlugin implements Listener {
@@ -248,6 +249,74 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
             }
         }
 
+        HumanEntity human = event.getWhoClicked();
+        if (human != null && human instanceof Player) {
+            Player player = (Player)human;
+
+            // took radioactive item from chest?
+            // TODO: this actually can't check the player inventory just yet since it isn't updated
+            // it needs to instead check the bottom inventory view
+            applyRadiation(player);
+
+        }
+    }
+
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void playerPickupItem(PlayerPickupItemEvent event) {
+        if (event.getPlayer() != null) {
+            // picked up radioactive material?
+            applyRadiation(event.getPlayer());
+        }
+    }
+
+    // Radiate the player if they are holding radioactive material
+    public void applyRadiation(final Player player) {
+        if (isHoldingRadioactive(player)) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
+                    this,
+                    new Runnable() {
+                        public void run() {
+                            if (isHoldingRadioactive(player)) {
+                                player.sendMessage("Radioactive material held"); 
+
+                                int health = player.getHealth();
+
+                                //player.damage(0); // lame Bukkit wrapper doesn't allow custom DamageSource - 
+                                // .. setLastDamageCause, takes event which has http://jd.bukkit.org/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+                                net.minecraft.server.Entity entity = ((CraftEntity)player).getHandle();
+                                entity.damageEntity(ic2.common.IC2DamageSource.radiation, 1);
+
+                              
+                                // fixed 1/2 heart health decrement
+                                health -= 1; 
+                                if (health <= 0) {
+                                    // TODO
+                                }
+
+                                player.setHealth(health);
+
+                                applyRadiation(player);
+                            }
+                        }
+                    }, 20);
+        }
+    }
+
+    // Return whether player is holding radioactive material
+    public boolean isHoldingRadioactive(Player player) {
+        PlayerInventory inventory = player.getInventory();
+
+        for (int i = 0; i < inventory.getSize(); i += 1) {
+            ItemStack item = inventory.getItem(i);
+
+            if (item != null && isRadioactive(item)) {
+                log.info("Player "+player.getName()+" holding radioactive item: " + item);
+                return true;
+            }
+            log.info("Player not radioactive: " + item);
+        }
+
+        return false;
     }
 /*
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
@@ -300,7 +369,7 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                     for (int i = 0; i < inventory.getSize(); i += 1) {
                         ItemStack item = inventory.getItem(i);
 
-                        if (item != null && (item.getTypeId() == 237 || item.getTypeId() == 30244)) { // IC2 nuke, refined uranium
+                        if (item != null && isRadioactive(item)) {
                             inventory.clear(i);
 
                             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
@@ -315,6 +384,10 @@ public class ExphcTweaks extends JavaPlugin implements Listener {
                 }
             }
         }
+    }
+
+    public boolean isRadioactive(ItemStack item) {
+        return item.getTypeId() == 237 || item.getTypeId() == 30244; // IC2 nuke, refined uranium
     }
 
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
